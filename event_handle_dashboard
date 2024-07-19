@@ -43,14 +43,12 @@
   <row>
     <panel depends="$show_gender_graph$">
       <title>Avg by Gender</title>
-      
       <input type="radio" token="field1">
         <label></label>
         <choice value="avg_all">All</choice>
         <choice value="avg_reading">Reading</choice>
         <choice value="avg_writing">Writing</choice>
         <choice value="avg_math">Math</choice>
-        
         <change>
           <condition value="avg_reading">
             <set token="search_string1">stats avg("reading score") as avg_reading_score by gender</set>
@@ -65,10 +63,7 @@
             <set token="search_string1">stats avg("reading score") as avg_reading_score, avg("writing score") as avg_writing_score,avg("math score") as avg_math_score  by gender</set>
           </condition>
         </change>
-        
-        
       </input>
-      
       <chart>
         <search>
           <query>index=vk_idx source="studentsperformance.csv" | $search_string1$</query>
@@ -113,9 +108,80 @@
   <row>
     <panel depends="$show_ethinicity_graph$">
       <title>Avg by Ethinicity</title>
+      
+      
+      
+      <input type="radio" token="ethinicity_all">
+        <label></label>
+        <change>
+          <condition value="ethinicity_all">
+            <set token="search_string2"> stats avg("math score") as avg_math_score, avg("writing score") as avg_writing_score, avg("reading score") as avg_reading_score by race_ethnicity</set>
+            <unset token="ethinicity_math"></unset>
+            <unset token="ethinicity_reading"></unset>
+             <unset token="ethinicity_writing"></unset>
+             <unset token="form.ethinicity_math"></unset>
+            <unset token="form.ethinicity_reading"></unset>
+             <unset token="form.ethinicity_writing"></unset>
+            </condition>
+        </change>
+        <choice value="ethinicity_all">All</choice>
+      </input>
+      
+      
+      <input type="radio" token="ethinicity_math">
+        <label></label>
+        <change>
+          <condition value="ethinicity_math">
+            <set token="search_string2"> stats avg("math score") as avg_math_score by race_ethnicity</set>
+          <unset token="ethinicity_all"></unset>
+            <unset token="ethinicity_reading"></unset>
+             <unset token="ethinicity_writing"></unset>
+             <unset token="form.ethinicity_all"></unset>
+            <unset token="form.ethinicity_reading"></unset>
+             <unset token="form.ethinicity_writing"></unset>
+             </condition>
+        </change>
+        <choice value="ethinicity_math">Math</choice>
+      </input>
+      
+      
+      <input type="radio" token="ethinicity_reading">
+        <label></label>
+        <change>
+          <condition value="ethinicity_reading">
+            <set token="search_string2"> stats avg("reading score") as avg_reading_score by race_ethnicity</set>
+             <unset token="ethinicity_all"></unset>
+            <unset token="ethinicity_math"></unset>
+             <unset token="ethinicity_writing"></unset>
+             <unset token="form.ethinicity_all"></unset>
+            <unset token="form.ethinicity_math"></unset>
+             <unset token="form.ethinicity_writing"></unset>
+          </condition>
+        </change>
+        <choice value="ethinicity_reading">Reading</choice>
+      </input>
+      
+      
+      <input type="radio" token="ethinicity_writing">
+        <label></label>
+        <change>
+          <condition value="ethinicity_writing">
+            <set token="search_string2"> stats avg("writing score") as avg_writing_score by race_ethnicity</set>
+             <unset token="ethinicity_all"></unset>
+            <unset token="ethinicity_reading"></unset>
+             <unset token="ethinicity_math"></unset>
+             <unset token="form.ethinicity_all"></unset>
+            <unset token="form.ethinicity_reading"></unset>
+             <unset token="form.ethinicity_math"></unset>
+          </condition>
+        </change>
+        <choice value="ethinicity_writing">Writing</choice>
+      </input>
+      
+      
       <chart>
         <search>
-          <query>index=vk_idx source="studentsperformance.csv" | stats avg("math score") as avg_math_score, avg("writing score") as avg_writing_score, avg("reading score") as avg_reading_score by race_ethnicity</query>
+          <query>index=vk_idx source="studentsperformance.csv" | $search_string2$</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
           <sampleRatio>1</sampleRatio>
