@@ -41,13 +41,24 @@
     </input>
   </fieldset>
   <row>
-    <panel>
+    <panel rejects="$hide_panel_male_singleval$">
+      <title>Male</title>
       <single>
         <search>
           <query>index=vk_idx source="studentsperformance.csv" gender="$gender$" | stats count by gender |where gender="male" | table count</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
           <sampleRatio>1</sampleRatio>
+        
+        <done>
+          <condition match="'job.resultCount'==0">
+            <set token="hide_panel_male_singleval"></set>
+          </condition>
+          <condition>
+            <unset token="hide_panel_male_singleval"></unset>
+          </condition>
+        </done>
+        
         </search>
         <option name="colorBy">value</option>
         <option name="colorMode">block</option>
@@ -68,13 +79,22 @@
         <option name="useThousandSeparators">1</option>
       </single>
     </panel>
-    <panel>
+    <panel rejects="$hide_panel_female_singleval$">
+      <title>Female</title>
       <single>
         <search>
           <query>index=vk_idx source="studentsperformance.csv" gender="$gender$" | stats count by gender |where gender="female" | table count</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
           <sampleRatio>1</sampleRatio>
+          <done>
+          <condition match="'job.resultCount'==0">
+            <set token="hide_panel_female_singleval"></set>
+          </condition>
+          <condition>
+            <unset token="hide_panel_female_singleval"></unset>
+          </condition>
+        </done>
         </search>
         <option name="colorMode">block</option>
         <option name="drilldown">none</option>
