@@ -8,8 +8,6 @@
       <default>male</default>
       <initialValue>male</initialValue>
     </input>
-    
-    
     <input type="dropdown" token="score_by" searchWhenChanged="true">
       <label>Score Graph By</label>
       <choice value="all">All</choice>
@@ -18,45 +16,62 @@
       <choice value="score_by_ethinicity">Ethinicity</choice>
       <default>all</default>
       <initialValue>all</initialValue>
-      
       <change>
-        
         <condition label="Gender">
-          
           <set token="show_gender_graph"></set>
           <unset token="show_ethinicity_graph"></unset>
           <unset token="show_both_graph"></unset>
-          
         </condition>
-        
         <condition value="score_by_ethinicity">
-          
           <set token="show_ethinicity_graph"></set>
-           <unset token="show_both_graph"></unset>
-            <unset token="show_gender_graph"></unset>
-          
+          <unset token="show_both_graph"></unset>
+          <unset token="show_gender_graph"></unset>
         </condition>
-        
         <condition match="$value$==&quot;both&quot;">
-          
           <set token="show_both_graph"></set>
-           <unset token="show_gender_graph"></unset>
-            <unset token="show_ethinicity_graph"></unset>
-          
+          <unset token="show_gender_graph"></unset>
+          <unset token="show_ethinicity_graph"></unset>
         </condition>
-        
+        <condition>
+          <set token="show_ethinicity_graph"></set>
+          <set token="show_both_graph"></set>
+          <set token="show_gender_graph"></set>
+        </condition>
       </change>
-      
-      
     </input>
   </fieldset>
-  
   <row>
     <panel depends="$show_gender_graph$">
       <title>Avg by Gender</title>
+      
+      <input type="radio" token="field1">
+        <label></label>
+        <choice value="avg_all">All</choice>
+        <choice value="avg_reading">Reading</choice>
+        <choice value="avg_writing">Writing</choice>
+        <choice value="avg_math">Math</choice>
+        
+        <change>
+          <condition value="avg_reading">
+            <set token="search_string1">stats avg("reading score") as avg_reading_score by gender</set>
+          </condition>
+          <condition value="avg_writing">
+            <set token="search_string1">stats avg("writing score") as avg_writing_score by gender</set>
+          </condition>
+          <condition value="avg_math">
+            <set token="search_string1">stats avg("math score") as avg_math_score by gender</set>
+          </condition>
+          <condition value="avg_all">
+            <set token="search_string1">stats avg("reading score") as avg_reading_score, avg("writing score") as avg_writing_score,avg("math score") as avg_math_score  by gender</set>
+          </condition>
+        </change>
+        
+        
+      </input>
+      
       <chart>
         <search>
-          <query>index=vk_idx source="studentsperformance.csv" | stats avg("math score") as avg_math_score, avg("writing score") as avg_writing_score, avg("reading score") as avg_reading_score by gender</query>
+          <query>index=vk_idx source="studentsperformance.csv" | $search_string1$</query>
           <earliest>-24h@h</earliest>
           <latest>now</latest>
           <sampleRatio>1</sampleRatio>
